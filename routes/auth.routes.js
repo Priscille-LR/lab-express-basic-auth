@@ -11,7 +11,8 @@ router.get('/signup', (req, res) => {
 });
 
 router.get('/profile', (req, res) => {
-    res.render('auth/profile');
+  const { username } = req.session.currentUser;
+  res.render('auth/profile', { username });
 });
 
 router.post('/signup', (req, res) => {
@@ -26,20 +27,42 @@ router.post('/signup', (req, res) => {
       return User.create({
         username,
         password: hashedPassword,
-      })
+      });
     })
     .then((userFromDB) => {
       //console.log('Newly created user is: ', userFromDB);
-      //req.session.currentUser = userFromDB
-      console.log('user from DB', userFromDB)
-      res.render('auth/profile', userFromDB);
-    //   res.redirect('/auth/profile', userFromDB);
+      req.session.currentUser = userFromDB;
+      //   console.log('user from DB', userFromDB)
+      res.redirect('/auth/profile');
     })
     .catch((error) => console.log(error));
 });
 
-
-
 //LOGIN
+
+router.get('/login', (req, res) => {
+  res.render('auth/login');
+});
+
+router.post('/login', (req, res) => {
+  console.log('SESSION =====> ', req.session);
+  const { username, password } = req.body;
+
+  User.findOne({ username })
+    .then((user) => {
+      if (!user) {
+        res.render('auth/login', {
+          errorMessage: 'Email is not registered. Try with other email.',
+        });
+        return;
+      } else if (bcryptjs.compareSync(password, user.password)) {
+        req.session.currentUser = user;
+        res.redirect('/auth/profile');
+      } else {
+        res.render('auth/login', { errorMessage: 'Incorrect password.' });
+      }
+    })
+    .catch((error) => console.log(error));
+});
 
 module.exports = router;
