@@ -9,7 +9,7 @@
   </head>
 
   <body>
-    <nav>
+    {{!-- <nav>
       <ul>
         <li id='to-left'>
           <p><a href='/'> Users - demo </a></p>
@@ -20,11 +20,57 @@
         <li class='to-right'>
           <a href='/auth/login'>Login</a>
         </li>
+        <form id='logout-form' action='/auth/logout' method='POST'>
+          <button>Logout</button>
+          <span> | </span>
+        </form>
+        <li class='to-right'>
+          <a href='/auth/profile'>Profile</a>
+        </li>
+        <li class='to-right'>
+          <a href='/auth/main'>Main</a>
+        </li>
+        <li class='to-right'>
+          <a href='/auth/private'>Private</a>
+        </li>
       </ul>
+    </nav> --}}
+    <nav>
+      {{#if username}}
+        <ul>
+          <li id='to-left'>
+            <p><a href='/'> Users - demo </a></p>
+          </li>
+          <li class='to-right'>
+            <a href='/auth/profile'>Profile</a>
+          </li>
+          <li class='to-right'>
+            <a href='/auth/main'>Main</a>
+          </li>
+          <li class='to-right'>
+            <a href='/auth/private'>Private</a>
+          </li>
+           <form id='logout-form' action='/auth/logout' method='POST' >
+            <button>Logout</button>
+          </form>
+        </ul>
+      {{else}}
+        <ul>
+          <li id='to-left'>
+            <p><a href='/'> Users - demo </a></p>
+          </li>
+          <li class='to-right'>
+            <a href='/auth/signup'>Signup</a>
+          </li>
+          <li class='to-right'>
+            <a href='/auth/login'>Login</a>
+          </li>
+        </ul>
+      {{/if}}
     </nav>
+
     {{{body}}}
 
     <script src='/js/script.js'></script>
   </body>
-
 </html>
